@@ -1,6 +1,6 @@
 package itnovai.api_spring_boot.controllers;
 
-import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,7 @@ import itnovai.api_spring_boot.entities.CategoryEntity;
 import itnovai.api_spring_boot.entities.ProductEntity;
 import itnovai.api_spring_boot.services.CategoryService;
 import itnovai.api_spring_boot.services.ProductService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
