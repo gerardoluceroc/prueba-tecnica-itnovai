@@ -23,3 +23,14 @@ services:
     ports:
       - "3000:3000"
     image: frontend-server-image
+    # depends_on:
+    #   - app_server
+  
+
+  nginx_server:
+    container_name: nginx-itnovai-container
+    image: nginx
+    volumes:
+      - ./nginx-files:/etc/nginx/conf.d
+    ports:
+      - "80:80"
