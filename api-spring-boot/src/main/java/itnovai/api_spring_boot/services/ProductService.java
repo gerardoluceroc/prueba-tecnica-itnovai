@@ -23,4 +23,7 @@ public class ProductService {
         return productRepository.findByCategory(category);
     }
     
+    public Iterable<ProductEntity> getProductByName(String name){
+        return productRepository.findByName(name);
+    }
 }
