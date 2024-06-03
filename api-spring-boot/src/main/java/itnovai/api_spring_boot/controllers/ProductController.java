@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,39 +30,49 @@ public class ProductController {
     @Autowired
     CategoryService categoryService;
 
-    //Obtener todos los productos
+    // Obtener todos los productos
     @GetMapping("/all")
-    public ResponseEntity<Iterable<ProductEntity>> getAllProducts(){
-
-        Iterable<ProductEntity> products = productService.getAllProducts();
-
-        // Retorna los productos y el código de estado 200 OK
-        return ResponseEntity.ok(products);
+    public ResponseEntity<?> getAllProducts() {
+        try {
+            Iterable<ProductEntity> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los productos: " + e.getMessage());
+        }
     }
 
-    //Filtrar productos por categoría
+    // Filtrar productos por categoría
     @GetMapping("/category/{id_category}")
-    public ResponseEntity<Iterable<ProductEntity>> getProductByCategory(@PathVariable Long id_category){
+    public ResponseEntity<?> getProductByCategory(@PathVariable Long id_category) {
+        try {
+            Optional<CategoryEntity> optionalCategory = categoryService.getCategoryById(id_category);
 
-        //Se obtiene la entidad categoría con una id especifica
-        CategoryEntity category = categoryService.getCategoryById(id_category).get();
-
-        //Se buscan los productos con la categoría de entrada
-        Iterable<ProductEntity> products = productService.getProductByCategory(category);
-
-        // Retorna los productos y el código de estado 200 OK
-        return ResponseEntity.ok(products);
+            //Si se encuentra el producto, se envía como respuesta junto a un mensaje del tipo 200
+            if (optionalCategory.isPresent()) {
+                CategoryEntity category = optionalCategory.get();
+                Iterable<ProductEntity> products = productService.getProductByCategory(category);
+                return ResponseEntity.ok(products);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoría no encontrada");
+            }
+            //En caso de no encontrarse, se envía la respuesta al cliente
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener productos por categoría: " + e.getMessage());
+        }
     }
 
+    // Filtrar productos por nombre
     @GetMapping("/name/{name_product}")
-    public ResponseEntity<Iterable<ProductEntity>> getProductByName(@PathVariable String name_product) {
+    public ResponseEntity<?> getProductByName(@PathVariable String name_product) {
 
-        // Llama al método ProductService para buscar productos por nombre
-        Iterable<ProductEntity> products = productService.getProductByName(name_product);
+        //Si se no existe errores en la ejecución, se envía como respuesta el producto junto a un mensaje del tipo 200
+        try {
+            Iterable<ProductEntity> products = productService.getProductByName(name_product);
+            return ResponseEntity.ok(products);
 
-        // Retorna los productos y el código de estado 200 OK
-        return ResponseEntity.ok(products);
+        //En caso de existir un error, se envía la respuesta al cliente
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener productos por nombre: " + e.getMessage());
+        }
     }
-    
-    
 }
