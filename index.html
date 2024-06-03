@@ -29,6 +29,123 @@
             <div id="productos"></div>
         </section>
     </main>
-    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            //Esta parte es para reiniciar la página en caso de que se presione cualquier enlace o etiqueta <a>
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    location.reload(); 
+                });
+            });
+
+            let productos = []
+        
+            const contenedorProductos = document.getElementById('productos');
+            
+            const renderProductos = (productos) => {
+                contenedorProductos.innerHTML = '';
+
+                //Si el arreglo de productos está vacío
+                if(productos.length === 0){
+                    const productoDiv = document.createElement('h1');
+                    productoDiv.className = 'producto';
+                    productoDiv.innerHTML = `
+                        <h3>No hay productos por mostrar</h3>
+                    `;
+                    contenedorProductos.appendChild(productoDiv);
+                }
+                
+                //Si hay productos para mostrar
+                else{
+                    productos.forEach(producto => {
+                        const productoDiv = document.createElement('div');
+                        productoDiv.className = 'producto';
+                
+                        productoDiv.innerHTML = `
+                            <img src="${producto.url_image}" alt="${producto.name}">
+                            <h3>${producto.name}</h3>
+                            <p>Precio: $${producto.price}</p>
+                            <p>Descuento: ${producto.discount}%</p>
+                            <p>Categoría: ${producto.category.name}</p>
+                        `;
+                        contenedorProductos.appendChild(productoDiv);
+                    });
+                }
+                
+            }
+            
+            renderProductos(productos);
+
+            const URL_API = "http://localhost:8080";
+
+            // Función asíncrona para consultarle al servidor por un producto con un nombre especifico
+            const getProductByName = async (texto) => {
+                try {
+                    const response = await fetch(`${URL_API}/product/name/${texto}`);
+                    if (response.ok) {
+                        return await response.json();
+                    } else {
+                        throw new Error('Error al enviar la solicitud al servidor');
+                    }
+                } catch (error) {
+                    throw error;
+                }
+            };
+
+            // Función asíncrona para obtener todos los productos
+            const getAllProducts = async () => {
+                try {
+                    const response = await fetch(`${URL_API}/product/all`);
+                    if (response.ok) {
+                        return await response.json();
+                    } else {
+                        throw new Error('Error al enviar la solicitud al servidor');
+                    }
+                } catch (error) {
+                    throw error;
+                }
+            };
+
+            // Función que ordena los productos (arreglo de objetos) por su categoría
+            const ordenarPorCategoria = (productos) => {
+                return productos.sort((a, b) => a.category.id - b.category.id);
+            };
+
+            // Obtener todos los productos y almacenarlos en la variable
+            getAllProducts().then((response) => {
+                productos = ordenarPorCategoria(response);
+                renderProductos(productos);
+            }).catch((error) => {
+                console.error("Error al obtener los productos:", error);
+            }); 
+
+            // Función para manejar el click del botón o cuando se envíe los datos del formulario
+            const handleSearchButtonClick = (event) => {
+                event.preventDefault();
+                const texto = buscador.value;
+                getProductByName(texto)
+                    .then((productosFiltrados) => {
+
+                        const productosOrdenados = ordenarPorCategoria(productosFiltrados);
+                        renderProductos(productosOrdenados);
+                        
+                    })
+                    .catch((error) => {
+                        console.log("Error al buscar productos:", error);
+                    });
+            };
+
+            // Obtén el formulario, el botón y el campo de entrada del buscador
+            const form = document.getElementById('searchContainer');
+            const button = form.querySelector('button');
+            const buscador = document.getElementById('searchInput');
+
+            // Se agregan los event listeners para el formulario
+            button.addEventListener('click', handleSearchButtonClick);
+            form.addEventListener('submit', handleSearchButtonClick);
+        });
+    </script>
 </body>
 </html>

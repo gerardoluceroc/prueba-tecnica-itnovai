@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import itnovai.api_spring_boot.services.ProductService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -52,11 +53,11 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping("/name")
-    public ResponseEntity<Iterable<ProductEntity>> getProductByName(@RequestBody String name) {
+    @GetMapping("/name/{name_product}")
+    public ResponseEntity<Iterable<ProductEntity>> getProductByName(@PathVariable String name_product) {
 
         // Llama al método ProductService para buscar productos por nombre
-        Iterable<ProductEntity> products = productService.getProductByName(name);
+        Iterable<ProductEntity> products = productService.getProductByName(name_product);
 
         // Retorna los productos y el código de estado 200 OK
         return ResponseEntity.ok(products);
