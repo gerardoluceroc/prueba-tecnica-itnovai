@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app_server:
+    container_name: api-spring-boot-container
+    build:
+      context: ./api-spring-boot
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: api-spring-boot
+      SPRING_DATASOURCE_URL: jdbc:mysql://itnovai-test.czny55quvxhk.us-east-1.rds.amazonaws.com:3306/itnovai_test
+      SPRING_DATASOURCE_USERNAME: itnovai_test
+      SPRING_DATASOURCE_PASSWORD: itnovai_test
+    image: api-spring-boot-image
+
+  frontend_server:
+    container_name: frontend-server-container
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    image: frontend-server-image

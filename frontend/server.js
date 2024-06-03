@@ -1,9 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const mime = require('mime');
 
-const PORT = 8000;
+const PORT = 3000;
 const PUBLIC_DIR = path.join(__dirname, '/');
 
 const server = http.createServer((req, res) => {
@@ -22,8 +21,26 @@ const server = http.createServer((req, res) => {
         res.end('Error interno del servidor');
       }
     } else {
-      // Archivo encontrado, servirlo con el tipo MIME correcto
-      const contentType = mime.getType(filePath) || 'text/html';
+      // Archivo encontrado, determinar el tipo MIME basado en la extensión del archivo
+      let contentType = 'text/html';
+      const extname = path.extname(filePath);
+      switch (extname) {
+        case '.js':
+          contentType = 'text/javascript';
+          break;
+        case '.css':
+          contentType = 'text/css';
+          break;
+        case '.json':
+          contentType = 'application/json';
+          break;
+        case '.png':
+          contentType = 'image/png';
+          break;
+        case '.jpg':
+          contentType = 'image/jpg';
+          break;
+      }
       res.writeHead(200, { 'Content-Type': contentType });
       res.end(data, 'utf-8');
     }
