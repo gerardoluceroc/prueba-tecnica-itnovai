@@ -1,8 +1,6 @@
 package itnovai.api_spring_boot.services;
 
-import java.util.ArrayList;
 
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,10 @@ public class ProductService {
     public Iterable<ProductEntity> getAllProducts(){
 
         return productRepository.findAll();
+    }
+
+    public Iterable<ProductEntity> getProductByCategory(int category){
+        return productRepository.findByCategory(category);
     }
     
 }

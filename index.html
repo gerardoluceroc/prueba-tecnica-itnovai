@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Catálogo de Productos</h1>
+    </header>
+    <nav>
+        <a href="#">Inicio</a>
+        <a href="#">Productos</a>
+        <a href="#">Acerca de</a>
+        <a href="#">Contacto</a>
+    </nav>
+    <main>
+        <section id="catalogo">
+            <h2>Lista de Productos</h2>
+            <form id="searchContainer">
+                <input type="text" id="searchInput" placeholder="Buscar producto">
+                <button type="submit">
+                    <span class="material-icons">search</span>
+                </button>
+            </form>
+            <div id="productos"></div>
+        </section>
+    </main>
+    <script src="js/script.js"></script>
+</body>
+</html>
