@@ -8,7 +8,7 @@ Prueba técnica de la empresa ItnovAI.
 * [Instalar Java 17](http://codigoelectronica.com/blog/instalar-java-17-en-ubuntu)
 
 ## Resumen
-Se ha desarrollado una API Rest con Java Spring Boot (usando Java 17) que se conecta con la base de datos facilitada para el ejercicio. Esta API se despliega con Docker y se mapea al puerto 8080 tanto interno como externo (ver docker-compose.yaml). 
+Se ha desarrollado una API Rest con Java Spring Boot (usando Java 17 y Maven) que se conecta con la base de datos facilitada para el ejercicio. Esta API se despliega con Docker y se mapea al puerto 8080 tanto interno como externo (ver docker-compose.yaml). 
 
 En cuanto al frontend, aunque no se utiliza ningún framework ya que solo se emplea un archivo index.html (con el script dentro debido a pequeños problemas relacionados con "MIME type" cuando se separaba el script en archivos aparte), para una mayor comodidad y poder desplegar el sistema con Docker, se ha montado un pequeño servidor con Node.js en el que se despliega el archivo index.html correspondiente. 
 
@@ -26,7 +26,7 @@ cd api-spring-boot
 Luego, debe crear el archivo .jar
 
 ```bash
-./mvnw install -DskipTestssysctl
+./mvnw install -DskipTests
 ```
 
 Luego de esto, puede volver al directorio principal.
